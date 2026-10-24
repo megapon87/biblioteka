@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ book.title }} — Каталожна картка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --paper:        #efe7d3;
+    --paper-deep:   #e6dcc2;
+    --paper-line:   #c9bc9c;
+    --ink:          #23303d;
+    --ink-soft:     #55636e;
+    --stamp-red:    #9c3b2e;
+    --stamp-green:  #4f6b4f;
+    --gold:         #a9813f;
+    --card-edge:    #ded0ac;
+    --desk:         #d9cfb8;
+    --desk-deep:    #c9bd9f;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+    font-family:'Inter', sans-serif;
+    background:
+        radial-gradient(ellipse at 20% 0%, rgba(255,255,255,.25), transparent 55%),
+        linear-gradient(180deg, var(--desk) 0%, var(--desk-deep) 100%);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:56px 20px;
+    position:relative;
+    overflow-x:hidden;
+}
+body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:repeating-linear-gradient(
+        95deg, rgba(0,0,0,0.015) 0px, rgba(0,0,0,0.015) 1px, transparent 1px, transparent 3px
+    );
+    pointer-events:none;
+}
+.back-link{
+    position:fixed;
+    top:24px; left:24px;
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    color: var(--ink-soft);
+    text-decoration:none;
+    letter-spacing:1px;
+    z-index:5;
+}
+.back-link:hover{ color: var(--ink); }
+.back-link a{ color: inherit; text-decoration:none; }
+.back-link a:hover{ color: var(--ink); text-decoration:underline; }
+.scene{
+    position:relative;
+    width:100%;
+    max-width:560px;
+    animation: rise .9s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes rise{
+    from{ opacity:0; transform: translateY(18px) rotate(-1.2deg); }
+    to{ opacity:1; transform: translateY(0) rotate(-0.6deg); }
+}
+.cover-wrap{
+    position:relative;
+    width:128px;
+    margin:0 0 -46px 38px;
+    transform: rotate(-4deg);
+    z-index:3;
+    filter: drop-shadow(0 14px 18px rgba(35,48,61,.28));
+}
+.cover{
+    width:128px;
+    height:182px;
+    border-radius:3px 7px 7px 3px;
+    background:
+        linear-gradient(115deg, rgba(255,255,255,.10) 0%, transparent 30%),
+        repeating-linear-gradient(180deg, rgba(0,0,0,.05) 0 2px, transparent 2px 4px),
+        linear-gradient(160deg, #3a5246, #24352c 70%);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:14px 10px;
+    border:1px solid rgba(0,0,0,.25);
+}
+.cover::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:9px;
+    background:linear-gradient(90deg, rgba(0,0,0,.45), transparent);
+}
+.cover-rule{ width:70%; height:1px; background:rgba(198,164,92,.65); }
+.cover-rule.top{ margin-bottom:12px; }
+.cover-rule.bottom{ margin-top:12px; }
+.cover-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:19px;
+    color:#e7d8ad;
+    text-align:center;
+    line-height:1.15;
+    letter-spacing:.2px;
+}
+.cover-author{
+    margin-top:10px;
+    font-family:'Courier Prime', monospace;
+    font-size:9.5px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:#c6a45c;
+}
+.cover-ornament{ margin-top:9px; font-size:11px; color:#c6a45c; letter-spacing:6px; }
+.card{
+    position:relative;
+    background:var(--paper);
+    border-radius:6px;
+    padding:64px 40px 38px;
+    box-shadow:
+        0 1px 0 rgba(255,255,255,.5) inset,
+        0 24px 50px -18px rgba(35,48,61,.45),
+        0 4px 10px rgba(35,48,61,.12);
+    border:1px solid var(--card-edge);
+}
+.holes{
+    position:absolute; top:16px; left:0; right:0;
+    display:flex; justify-content:center; gap:250px;
+}
+.holes span{
+    width:9px; height:9px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #fff, var(--desk-deep) 70%);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.35);
+}
+.card-no{
+    position:absolute; top:18px; right:24px;
+    font-family:'Courier Prime', monospace;
+    font-size:11px; letter-spacing:1px; color:var(--ink-soft);
+}
+.eyebrow{
+    font-family:'Courier Prime', monospace;
+    font-size:11px; letter-spacing:3px; text-transform:uppercase;
+    color:var(--stamp-green); margin-bottom:10px;
+}
+h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(32px, 6vw, 42px);
+    line-height:1.05;
+    color:var(--ink);
+    letter-spacing:-.3px;
+}
+.author{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:18px;
+    color:var(--ink-soft);
+    margin-top:8px;
+}
+.divider{
+    height:1px;
+    background:repeating-linear-gradient(90deg, var(--paper-line) 0 6px, transparent 6px 11px);
+    margin:24px 0;
+}
+.meta-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    font-family:'Courier Prime', monospace;
+}
+.meta-grid dt{
+    font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--ink-soft); margin-bottom:4px;
+}
+.meta-grid dd{ font-size:14px; color:var(--ink); }
+.progress-zone{
+    display:flex; align-items:center; gap:22px;
+    margin-top:30px; padding-top:26px;
+    border-top:1px dashed var(--paper-line);
+}
+.stamp{ position:relative; width:92px; height:92px; flex-shrink:0; transform: rotate(-9deg); }
+.stamp svg{ width:100%; height:100%; }
+.stamp-label{
+    font-family:'Courier Prime', monospace; font-weight:700;
+    font-size:9.5px; letter-spacing:1px; fill: var(--stamp-red);
+}
+.progress-text{ flex:1; }
+.progress-text .pct{
+    font-family:'Fraunces', serif; font-weight:600; font-size:26px; color:var(--stamp-red);
+}
+.progress-text .label{ font-family:'Inter', sans-serif; font-size:13px; color: var(--ink-soft); margin-top:2px; }
+.progress-bar-track{ display:none; }
+.notes{ margin-top:30px; }
+.notes .eyebrow{ margin-bottom:14px; }
+.note-lines{
+    font-family:'Courier Prime', monospace;
+    font-size:14.5px; line-height:2.15; color:var(--ink);
+    background-image: repeating-linear-gradient(
+        var(--paper) 0, var(--paper) calc(2.15em - 1px),
+        var(--paper-line) calc(2.15em - 1px), var(--paper-line) 2.15em
+    );
+    white-space: pre-line;
+}
+.footer-row{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:30px; padding-top:22px; border-top:1px dashed var(--paper-line);
+}
+.stars{ letter-spacing:3px; font-size:17px; color: var(--gold); }
+.stars .dim{ color: var(--paper-line); }
+.due{ font-family:'Courier Prime', monospace; font-size:11px; color:var(--ink-soft); text-align:right; line-height:1.5; }
+.tape{
+    position:absolute; top:-14px; left:50%;
+    width:96px; height:26px; margin-left:-48px;
+    background: repeating-linear-gradient(
+        45deg, rgba(159,116,74,.35), rgba(159,116,74,.35) 6px,
+        rgba(159,116,74,.22) 6px, rgba(159,116,74,.22) 12px
+    );
+    border:1px solid rgba(159,116,74,.25);
+    opacity:.85; transform: rotate(-2deg);
+    box-shadow: 0 3px 6px rgba(0,0,0,.08);
+}
+.save-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-top:26px;
+    padding:11px 20px;
+    border-radius:8px;
+    border:1px solid var(--stamp-green);
+    background: transparent;
+    color: var(--stamp-green);
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    transition: background .2s, color .2s;
+    width:100%;
+    justify-content:center;
+}
+.save-btn:hover{ background: var(--stamp-green); color:#fff; }
+.save-btn.saved{ background: var(--stamp-green); color:#fff; }
+.login-hint{
+    margin-top:20px;
+    text-align:center;
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    color: var(--ink-soft);
+}
+.login-hint a{ color: var(--stamp-green); }
+@media (max-width:480px){
+    .card{ padding:56px 22px 30px; }
+    .meta-grid{ grid-template-columns: 1fr 1fr; }
+    .cover-wrap{ margin-left:14px; }
+    .holes{ gap:180px; }
+}
+</style>
+</head>
+<body>
+
+<div class="back-link" style="display:flex; gap:16px; align-items:center;">
+    <a href="{% url 'home' %}">← до бібліотеки</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">мій профіль</a>
+    {% endif %}
+</div>
+
+<div class="scene">
+    <div class="tape"></div>
+
+    <div class="cover-wrap">
+        <div class="cover">
+            <div class="cover-rule top"></div>
+            <div class="cover-title">{{ book.title }}</div>
+            <div class="cover-ornament">✻</div>
+            <div class="cover-author">{{ book.author }}</div>
+            <div class="cover-rule bottom"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="holes"><span></span><span></span></div>
+        <div class="card-no">№ {{ book.id|stringformat:"03d" }}</div>
+
+        <div class="eyebrow">Каталожна картка</div>
+        <h1>{{ book.title }}</h1>
+        <div class="author">{{ book.author }}</div>
+
+        <div class="divider"></div>
+
+        <dl class="meta-grid">
+            <div>
+                <dt>Індекс</dt>
+                <dd>{{ book.catalog_index|default:"—" }}</dd>
+            </div>
+            <div>
+                <dt>Жанр</dt>
+                <dd>{{ book.genre|default:"—" }}</dd>
+            </div>
+            <div>
+                <dt>Сторінок</dt>
+                <dd>{{ book.pages_total }}</dd>
+            </div>
+        </dl>
+
+        <div class="progress-zone">
+            <div class="stamp">
+                <svg viewBox="0 0 100 100">
+                    <defs>
+                        <path id="circlePath" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" />
+                    </defs>
+                    <circle cx="50" cy="50" r="44" fill="none" stroke="var(--stamp-red)" stroke-width="1.4" stroke-dasharray="3,2.4" opacity=".85"/>
+                    <circle cx="50" cy="50" r="34" fill="none" stroke="var(--stamp-red)" stroke-width="1.4" opacity=".7"/>
+                    <text class="stamp-label">
+                        <textPath href="#circlePath" startOffset="2%">УКРАЇНСЬКА КЛАСИКА</textPath>
+                    </text>
+                    <text x="50" y="57" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="18" fill="var(--stamp-red)">{{ book.year|default:"—" }}</text>
+                </svg>
+            </div>
+            <div class="progress-text">
+                <div class="pct">{{ book.genre|default:"Художня література" }}</div>
+                <div class="label">Обсяг: {{ book.pages_total|default:"—" }} стор.</div>
+            </div>
+        </div>
+
+        {% if book.summary %}
+        <div class="notes">
+            <div class="eyebrow">Скорочено</div>
+            <div class="note-lines">{{ book.summary }}</div>
+        </div>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'toggle_save' book.id %}">
+            {% csrf_token %}
+            <button type="submit" class="save-btn {% if is_saved %}saved{% endif %}">
+                {% if is_saved %}🔖 Збережено — прибрати{% else %}🔖 Зберегти книгу{% endif %}
+            </button>
+        </form>
+        {% else %}
+        <p class="login-hint"><a href="{% url 'login' %}">Увійдіть</a>, щоб зберігати книги у свій профіль</p>
+        {% endif %}
+
+        <div class="footer-row">
+            <div class="stars">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= book.rating %}★{% else %}<span class="dim">★</span>{% endif %}
+                {% endfor %}
+            </div>
+            <div class="due">
+                Полиця: «{{ book.shelf_label }}»<br>
+                № {{ book.id|stringformat:"03d" }}
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

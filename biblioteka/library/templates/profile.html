@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мій профіль — Моя бібліотека</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400&family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+    --paper:#efe7d3; --paper-line:#c9bc9c; --ink:#23303d; --ink-soft:#55636e;
+    --stamp-green:#4f6b4f; --card-edge:#ded0ac; --wall:#ddd2b8;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    background: linear-gradient(180deg, var(--wall), #cfc2a2);
+    padding:60px 20px;
+    display:flex; flex-direction:column; align-items:center;
+}
+.topnav{ position:fixed; top:20px; right:20px; display:flex; gap:10px; }
+.topnav a{
+    font-family:'Courier Prime', monospace; font-size:12px;
+    color: var(--ink); text-decoration:none;
+    background: rgba(255,255,255,.55); border:1px solid var(--card-edge);
+    padding:8px 14px; border-radius:6px;
+}
+.topnav a:hover{ background: rgba(255,255,255,.85); }
+header{ text-align:center; max-width:480px; margin-bottom:36px; }
+.eyebrow{
+    font-family:'Courier Prime', monospace; font-size:11px; letter-spacing:3px;
+    text-transform:uppercase; color: var(--stamp-green); margin-bottom:10px;
+}
+h1{ font-family:'Fraunces', serif; font-weight:600; font-size:36px; color:var(--ink); }
+header p{ margin-top:10px; color:var(--ink-soft); font-size:14px; }
+.grid{
+    width:min(760px, 94vw);
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap:16px;
+}
+.book-card{
+    background: var(--paper);
+    border:1px solid var(--card-edge);
+    border-radius:8px;
+    padding:18px 20px;
+    text-decoration:none;
+    display:block;
+    transition: transform .2s, box-shadow .2s;
+}
+.book-card:hover{ transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,.15); }
+.book-card h3{
+    font-family:'Fraunces', serif; font-weight:600; font-style:italic;
+    font-size:18px; color:var(--ink); margin-bottom:6px;
+}
+.book-card p{ font-family:'Courier Prime', monospace; font-size:12px; color:var(--ink-soft); }
+.empty{
+    font-family:'Courier Prime', monospace; color: var(--ink-soft);
+    text-align:center; max-width:360px; line-height:1.7;
+}
+.empty a{ color: var(--stamp-green); }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+    <a href="{% url 'home' %}">← бібліотека</a>
+    <a href="{% url 'logout' %}">Вийти</a>
+</div>
+
+<header>
+    <div class="eyebrow">Мій кабінет</div>
+    <h1>{{ user.username }}</h1>
+    <p>Збережені книги: {{ saved_books|length }}</p>
+</header>
+
+{% if saved_books %}
+<div class="grid">
+    {% for book in saved_books %}
+    <a class="book-card" href="{% url 'book_detail' book.id %}">
+        <h3>{{ book.title }}</h3>
+        <p>{{ book.author }}</p>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p class="empty">Ви ще не зберегли жодної книги. Перейдіть до <a href="{% url 'home' %}">бібліотеки</a>, відкрийте книгу й натисніть «Зберегти книгу».</p>
+{% endif %}
+
+</body>
+</html>

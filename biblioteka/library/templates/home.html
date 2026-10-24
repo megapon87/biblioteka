@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Моя бібліотека</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --paper:        #efe7d3;
+    --paper-deep:   #e6dcc2;
+    --paper-line:   #c9bc9c;
+    --ink:          #23303d;
+    --ink-soft:     #55636e;
+    --stamp-red:    #9c3b2e;
+    --stamp-green:  #4f6b4f;
+    --gold:         #a9813f;
+    --card-edge:    #ded0ac;
+    --wood:         #5b4230;
+    --wood-deep:    #43301f;
+    --wood-light:   #6f5439;
+    --wall:         #ddd2b8;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+    font-family:'Inter', sans-serif;
+    background:
+        radial-gradient(ellipse at 50% -10%, rgba(255,255,255,.35), transparent 55%),
+        linear-gradient(180deg, var(--wall) 0%, #cfc2a2 100%);
+    min-height:100vh;
+    padding: 64px 20px 90px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+    overflow-x:hidden;
+}
+body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:repeating-linear-gradient(
+        95deg, rgba(0,0,0,.015) 0px, rgba(0,0,0,.015) 1px, transparent 1px, transparent 3px
+    );
+    pointer-events:none;
+}
+header{
+    text-align:center;
+    max-width:520px;
+    margin-bottom:48px;
+    animation: dropIn .8s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes dropIn{
+    from{ opacity:0; transform: translateY(-14px); }
+    to{ opacity:1; transform: translateY(0); }
+}
+.eyebrow{
+    font-family:'Courier Prime', monospace;
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--stamp-green);
+    margin-bottom:14px;
+}
+h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(34px, 6vw, 48px);
+    color:var(--ink);
+    letter-spacing:-.4px;
+    line-height:1.05;
+}
+header p{
+    margin-top:14px;
+    color:var(--ink-soft);
+    font-size:15px;
+    line-height:1.6;
+}
+.bookcase{
+    position:relative;
+    width:min(680px, 92vw);
+    background:
+        linear-gradient(180deg, var(--wood-light), var(--wood) 8%, var(--wood) 92%, var(--wood-deep));
+    border-radius: 6px;
+    padding: 14px 16px 22px;
+    box-shadow:
+        0 40px 60px -30px rgba(35,26,15,.55),
+        0 2px 0 rgba(255,255,255,.08) inset;
+    animation: rise 1s .1s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes rise{
+    from{ opacity:0; transform: translateY(24px); }
+    to{ opacity:1; transform: translateY(0); }
+}
+.bookcase::before{
+    content:"";
+    position:absolute; inset:0;
+    border-radius:6px;
+    background-image:repeating-linear-gradient(
+        180deg, rgba(0,0,0,.09) 0 1px, transparent 1px 5px
+    );
+    opacity:.5;
+    pointer-events:none;
+}
+.frame-top, .frame-bottom{
+    height:12px;
+    background: linear-gradient(180deg, rgba(0,0,0,.28), transparent);
+    border-radius:3px;
+}
+.frame-bottom{ background: linear-gradient(0deg, rgba(0,0,0,.32), transparent); margin-top:6px; }
+.shelf{
+    position:relative;
+    background: linear-gradient(180deg, #efe6ce, #e2d6b6);
+    border-radius:2px;
+    padding: 14px 16px 9px;
+    display:flex;
+    align-items:flex-end;
+    gap:10px;
+    min-height:172px;
+    box-shadow:
+        0 10px 14px -6px rgba(0,0,0,.4),
+        inset 0 -6px 10px -4px rgba(0,0,0,.18);
+    overflow-x:auto;
+    overflow-y:hidden;
+}
+.shelf::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height:9px;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,.22));
+    pointer-events:none;
+}
+.shelf.empty{
+    justify-content:center;
+    align-items:center;
+}
+.empty-note{
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    letter-spacing:1px;
+    color: rgba(85,99,110,.55);
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.empty-note .dash{
+    width:34px; height:1px;
+    background: rgba(85,99,110,.35);
+}
+.spine-link{
+    display:block;
+    text-decoration:none;
+    z-index:2;
+    flex-shrink:0;
+    line-height:0;
+}
+.spine{
+    width:54px;
+    height:150px;
+    border-radius: 2px 4px 4px 2px;
+    box-shadow: 0 8px 14px -6px rgba(0,0,0,.45), inset 0 0 0 1px rgba(0,0,0,.3);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:space-between;
+    padding: 12px 0 14px;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s;
+    cursor:pointer;
+    line-height:normal;
+}
+.spine.h1{ height:150px; }
+.spine.h2{ height:141px; }
+.spine.h3{ height:156px; }
+.spine.h4{ height:146px; }
+.spine.h5{ height:136px; }
+.spine:hover, .spine:focus-visible{
+    transform: translateY(-12px) rotate(-2deg);
+    box-shadow: 0 24px 26px -12px rgba(0,0,0,.5), inset 0 0 0 1px rgba(0,0,0,.3);
+    outline:none;
+}
+.spine-rule{ width:60%; height:1px; background:rgba(198,164,92,.55); }
+.spine-title{
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:14px;
+    color:#ecdeb4;
+    letter-spacing:.3px;
+    white-space:nowrap;
+}
+.spine-author{
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family:'Courier Prime', monospace;
+    font-size:7.5px;
+    letter-spacing:1.2px;
+    color:#d8bf85;
+    text-transform:uppercase;
+    white-space:nowrap;
+}
+
+.spine-c1{ background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, transparent 10%), repeating-linear-gradient(180deg, rgba(0,0,0,.05) 0 2px, transparent 2px 4px), linear-gradient(100deg, #3d5748, #24352c 75%); }
+.spine-c2{ background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, transparent 10%), repeating-linear-gradient(180deg, rgba(0,0,0,.05) 0 2px, transparent 2px 4px), linear-gradient(100deg, #6b3a34, #47231f 75%); }
+.spine-c3{ background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, transparent 10%), repeating-linear-gradient(180deg, rgba(0,0,0,.05) 0 2px, transparent 2px 4px), linear-gradient(100deg, #35435f, #212c40 75%); }
+.spine-c4{ background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, transparent 10%), repeating-linear-gradient(180deg, rgba(0,0,0,.05) 0 2px, transparent 2px 4px), linear-gradient(100deg, #5c4a30, #3a2e1c 75%); }
+.spine-c5{ background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, transparent 10%), repeating-linear-gradient(180deg, rgba(0,0,0,.05) 0 2px, transparent 2px 4px), linear-gradient(100deg, #4a3a5c, #2e2438 75%); }
+.spotlight{
+    position:absolute;
+    top:-40px; left:50%;
+    width:130px; height:220px;
+    margin-left: -65px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,247,214,.55), transparent 70%);
+    pointer-events:none;
+    z-index:1;
+}
+.shelf-wrap{
+    position:relative;
+    margin-bottom:26px;
+}
+.shelf-tag{
+    position:absolute;
+    right:10px; bottom:-10px;
+    background: var(--paper);
+    border:1px solid var(--card-edge);
+    border-radius:3px;
+    padding:3px 9px;
+    font-family:'Courier Prime', monospace;
+    font-size:10px;
+    letter-spacing:1px;
+    color: var(--ink-soft);
+    box-shadow: 0 3px 6px rgba(0,0,0,.15);
+    transform: rotate(-1.5deg);
+    z-index:4;
+}
+.topnav{
+    position:fixed;
+    top:20px; right:20px;
+    display:flex;
+    gap:10px;
+    z-index:10;
+}
+.topnav a{
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    letter-spacing:.5px;
+    color: var(--ink);
+    text-decoration:none;
+    background: rgba(255,255,255,.55);
+    border:1px solid var(--card-edge);
+    padding:8px 14px;
+    border-radius:6px;
+    transition: background .2s;
+}
+.topnav a:hover{ background: rgba(255,255,255,.85); }
+.topnav a.primary{
+    background: var(--stamp-green);
+    color:#fff;
+    border-color: var(--stamp-green);
+}
+.topnav a.primary:hover{ background:#3f5a3f; }
+
+.search-form{
+    width:100%;
+    max-width:420px;
+    margin:0 auto 40px;
+    display:flex;
+    gap:8px;
+}
+.search-form input[type=text]{
+    flex:1;
+    padding:12px 16px;
+    border-radius:8px;
+    border:1px solid var(--card-edge);
+    background: var(--paper);
+    font-family:'Courier Prime', monospace;
+    font-size:13px;
+    color: var(--ink);
+    outline:none;
+}
+.search-form input[type=text]:focus{ border-color: var(--stamp-green); }
+.search-form button{
+    padding:12px 18px;
+    border-radius:8px;
+    border:none;
+    background: var(--ink);
+    color:#fff;
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    cursor:pointer;
+}
+.search-form button:hover{ background:#101820; }
+.search-clear{
+    display:block;
+    text-align:center;
+    margin:-24px auto 30px;
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    color: var(--ink-soft);
+    text-decoration:underline;
+}
+
+.results-grid{
+    width:min(760px, 94vw);
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap:16px;
+}
+.result-card{
+    background: var(--paper);
+    border:1px solid var(--card-edge);
+    border-radius:8px;
+    padding:18px 20px;
+    text-decoration:none;
+    display:block;
+    transition: transform .2s, box-shadow .2s;
+}
+.result-card:hover{ transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,.15); }
+.result-card h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:18px;
+    color:var(--ink);
+    margin-bottom:6px;
+}
+.result-card p{
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+}
+.no-results{
+    font-family:'Courier Prime', monospace;
+    color: var(--ink-soft);
+    text-align:center;
+    margin-top: 34px;
+    text-align:center;
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    color: rgba(35,48,61,.55);
+    max-width:420px;
+    line-height:1.7;
+}
+@media (max-width:480px){
+    .bookcase{ padding:12px 10px 18px; }
+    .shelf{ height:150px; padding:0 8px; }
+    .spine{ width:50px; height:130px; }
+    .spine-title{ font-size:14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+    {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">👤 {{ user.username }}</a>
+        <a href="{% url 'logout' %}">Вийти</a>
+    {% else %}
+        <a href="{% url 'login' %}">Увійти</a>
+        <a class="primary" href="{% url 'register' %}">Реєстрація</a>
+    {% endif %}
+</div>
+
+<header>
+    <div class="eyebrow">Бібліотека української класики</div>
+    <h1>Моя бібліотека</h1>
+    <p>{{ total }} творів української літератури зі скороченим переказом кожного.<br class="br-desktop">Оберіть книгу на полиці, щоб відкрити картку.</p>
+</header>
+
+<form class="search-form" method="get" action="{% url 'home' %}">
+    <input type="text" name="q" placeholder="Пошук за назвою або автором…" value="{{ query }}">
+    <button type="submit">Знайти</button>
+</form>
+
+{% if search_results is not None %}
+
+    {% if query %}
+    <a class="search-clear" href="{% url 'home' %}">← показати всі книги (очистити пошук)</a>
+    {% endif %}
+
+    {% if search_results %}
+    <div class="results-grid">
+        {% for book in search_results %}
+        <a class="result-card" href="{% url 'book_detail' book.id %}">
+            <h3>{{ book.title }}</h3>
+            <p>{{ book.author }} {% if book.id in saved_ids %}· 🔖 збережено{% endif %}</p>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-results">За запитом «{{ query }}» нічого не знайдено.</p>
+    {% endif %}
+
+{% else %}
+
+<div class="bookcase">
+    <div class="frame-top"></div>
+
+    {% for shelf in shelves %}
+    <div class="shelf-wrap">
+        <div class="shelf">
+            {% for book in shelf %}
+            <a class="spine-link" href="{% url 'book_detail' book.id %}" aria-label="Відкрити картку книги «{{ book.title }}»">
+                <div class="spine {% cycle 'spine-c1' 'spine-c2' 'spine-c3' 'spine-c4' 'spine-c5' %} {% cycle 'h1' 'h3' 'h2' 'h5' 'h4' %}">
+                    <div class="spine-rule"></div>
+                    <span class="spine-title">{{ book.title|truncatechars:20 }}</span>
+                    <span class="spine-author">{{ book.author }}</span>
+                    <div class="spine-rule"></div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <div class="shelf-tag">полиця «{{ shelf.0.shelf_label }}»</div>
+    </div>
+    {% empty %}
+    <div class="shelf empty">
+        <div class="empty-note"><span class="dash"></span>на полицях поки що порожньо<span class="dash"></span></div>
+    </div>
+    {% endfor %}
+
+    <div class="frame-bottom"></div>
+</div>
+
+<p class="footer-note">Натисніть на книгу, щоб відкрити її каталожну картку<br>з коротким переказом сюжету.</p>
+
+{% endif %}
+
+</body>
+</html>

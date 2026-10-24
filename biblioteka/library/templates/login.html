@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вхід — Моя бібліотека</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400&family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+    --paper:#efe7d3; --paper-line:#c9bc9c; --ink:#23303d; --ink-soft:#55636e;
+    --stamp-green:#4f6b4f; --card-edge:#ded0ac; --desk:#d9cfb8; --desk-deep:#c9bd9f;
+    --stamp-red:#9c3b2e;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(180deg, var(--desk), var(--desk-deep));
+    padding:40px 20px;
+}
+.card{
+    width:100%; max-width:380px;
+    background: var(--paper);
+    border:1px solid var(--card-edge);
+    border-radius:10px;
+    padding:36px 32px;
+    box-shadow: 0 24px 50px -18px rgba(35,48,61,.4);
+}
+.eyebrow{
+    font-family:'Courier Prime', monospace;
+    font-size:11px; letter-spacing:3px; text-transform:uppercase;
+    color: var(--stamp-green); margin-bottom:8px;
+}
+h1{ font-family:'Fraunces', serif; font-weight:600; font-size:28px; color:var(--ink); margin-bottom:22px; }
+.field{ margin-bottom:16px; }
+.field label{ display:block; font-family:'Courier Prime', monospace; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px; }
+.field input{
+    width:100%; padding:11px 13px; border-radius:6px;
+    border:1px solid var(--card-edge); background:#fff;
+    font-family:'Inter', sans-serif; font-size:14px; outline:none;
+}
+.field input:focus{ border-color: var(--stamp-green); }
+.errors{ color: var(--stamp-red); font-size:12px; margin-bottom:12px; }
+button{
+    width:100%; padding:13px; border:none; border-radius:8px;
+    background: var(--stamp-green); color:#fff; font-size:15px; font-weight:500;
+    cursor:pointer; margin-top:6px;
+}
+button:hover{ background:#3f5a3f; }
+.alt{ text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft); }
+.alt a{ color: var(--stamp-green); }
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="eyebrow">Моя бібліотека</div>
+    <h1>Вхід</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="field">
+            <label>Логін</label>
+            <input type="text" name="username" required>
+        </div>
+        <div class="field">
+            <label>Пароль</label>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit">Увійти</button>
+    </form>
+    <div class="alt">Ще немає акаунту? <a href="{% url 'register' %}">Зареєструватись</a></div>
+    <div class="alt"><a href="{% url 'home' %}">← до бібліотеки</a></div>
+</div>
+</body>
+</html>
